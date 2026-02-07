@@ -1,6 +1,6 @@
 const express = require('express');
-const viewsController = require('../controllers/viewsController');
-const authController = require('../controllers/authController');
+const viewsController = require('../controllers/views-controller');
+const authController = require('../controllers/auth-controller');
 const router = express.Router();
 
 router.get('/', authController.isLoggedIn, viewsController.getOverview);
