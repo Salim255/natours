@@ -1,7 +1,7 @@
 const express = require('express');
 const tourController = require('./../controllers/tours-controller'); //an object of variables
-const reviewRouter = require('./../routes/reviewsRoute');
-const authController = require('./../controllers/authController');
+const reviewRouter = require('./../routes/reviews-route');
+const authController = require('./../controllers/auth-controller');
 
 // creating new router as a middleware
 const router = express.Router();
