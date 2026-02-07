@@ -1,11 +1,11 @@
 const crypto = require('crypto');
 const { promisify } = require('util'); //We need this in orderer to use promisify method with the verification function(async..)
 const jwt = require('jsonwebtoken');
-const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync'); //we wrap all asynchronous function into this fucntion 
+const User = require('./../models/user-model');
+const catchAsync = require('./../utils/catch-async'); //we wrap all asynchronous function into this fucntion 
 // so that we don't need to write the try catch block in each and every function
 
-const AppError = require('./../utils/appError');
+const AppError = require('./../utils/app-error');
 const sendEmail = require('./../utils/email');
 
 const signToken = (id) => {

@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('./../controllers/users-controller'); //an object of variables
-const authController = require('./../controllers/authController');
+const authController = require('./../controllers/auth-controller');
 
 //creating new router as a middleware
 const router = express.Router();//This router here is just lik a mini app so we cans use it lik: router.use(any middleware)
