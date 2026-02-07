@@ -10,16 +10,17 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-//we JSON to onvert to java script
+
 exports.getAllTours = factory.getAll(Tour);
+
 //Using get to read data
-//geting variable, the variable can be var id or anything
-exports.getTour = factory.getOne(Tour, {path: 'reviews'});//papulate option object
-//Using Post to creat
-// exports.creatTour = (req, res) => {
-exports.creatTour =factory.createOne(Tour)
+//getting variable, the variable can be var id or anything
+exports.getTour = factory.getOne(Tour, {path: 'reviews'});//populate option object
+//Using Post to create
+// exports.createTour = (req, res) => {
+exports.createTour =factory.createOne(Tour)
 //to update params of un object we use patch
-exports.updatTour = factory.updateOne(Tour);
+exports.updateTour = factory.updateOne(Tour);
 //To delete un object form an API
 exports.deleteTour = factory.deleteOne(Tour);
 
@@ -103,12 +104,12 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 });
 
 // /tour-within?disatance=233&center=-40,45&unit=mi
-//or /tour-within/distance/233/center/-40,45/unit/mi
+// or /tour-within/distance/233/center/-40,45/unit/mi
 exports.getToursWithin =catchAsync(async (req, res, next) =>{
   const {distance, latlng, unit} = req.params;
-  const [lat,lng] = latlng.split(',');//latetude and longtude
+  const [lat,lng] = latlng.split(',');//latitude and longitude
 
-  const radius = unit === 'mi'? distance/3963.2 : distance / 6378.1;//to convrt the actuel distance in radius
+  const radius = unit === 'mi'? distance/3963.2 : distance / 6378.1;//to convert the actual distance in radius
   if(!lat || !lng){
     next(new AppError('Please provide latitude and longitude in the format lat, lng'), 400);
   }
@@ -126,13 +127,13 @@ exports.getToursWithin =catchAsync(async (req, res, next) =>{
 
 exports.getDistances = catchAsync(async(req, res, next)=>{
   const {latlng, unit} = req.params;
-  const [lat,lng] = latlng.split(',');//latetude and longtude
+  const [lat,lng] = latlng.split(',');//latitude and longitude
   const multiplier =unit === 'mi'? 0.000621371 : 0.001;
   if(!lat || !lng){
     next(new AppError('Please provide latitude and longitude in the format lat, lng'), 400);
   }
   
-  //In order to calculation we always need the aggregationpinpline
+  //In order to calculation we always need the aggregation pipeline
  const distances = await Tour.aggregate([
    {
      $geoNear:{
@@ -140,9 +141,10 @@ exports.getDistances = catchAsync(async(req, res, next)=>{
          type: 'Point',
          coordinates:[lng*1, lat *1]
        },
-       distanceField:'distance', //where all the the calculated distances will be stored 
-       distanceMultiplier: multiplier//in order to convert the distance from metrs to mi
-     },//alway need to be the first,and geoNear always neeed a start location, here we use the stratLocation that defined in tourModel, but if there more than startLocation, we need to specify the name for the GeoNear
+       distanceField:'distance', // where all the the calculated distances will be stored 
+       distanceMultiplier: multiplier //in order to convert the distance from meters to mi
+     },// alway need to be the first,and geoNear always need a start location, here we use the 
+     // startLocation that defined in tourModel, but if there more than startLocation, we need to specify the name for the GeoNear
     
    },
    { $project: {//in order to have only the distance and the name of the tour

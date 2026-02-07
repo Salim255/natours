@@ -1,5 +1,5 @@
 const express = require('express');
-const tourController = require('./../controllers/toursController'); //an object of variables
+const tourController = require('./../controllers/tours-controller'); //an object of variables
 const reviewRouter = require('./../routes/reviewsRoute');
 const authController = require('./../controllers/authController');
 
