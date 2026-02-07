@@ -1,7 +1,7 @@
-const Tour = require('./../models/tourModel');
-const User = require('./../models/userModel');
-const Review = require('./../models/reviewModel');
-const factory = require('./handlerFactory');
+const Tour = require('./../models/tour-model');
+const User = require('./../models/user-model');
+const Review = require('./../models/review-model');
+const factory = require('./handler-factory');
 
 
 
