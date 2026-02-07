@@ -1,5 +1,5 @@
 const express = require('express');
-const userController = require('./../controllers/usersController'); //an object of variables
+const userController = require('./../controllers/users-controller'); //an object of variables
 const authController = require('./../controllers/authController');
 
 //creating new router as a middleware
