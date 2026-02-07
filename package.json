@@ -1,0 +1,21 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Master backend with node & express",
+  "homepage": "https://github.com/Salim255/natours#readme",
+  "bugs": {
+    "url": "https://github.com/Salim255/natours/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Salim255/natours.git"
+  },
+  "license": "ISC",
+  "author": "Salim",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  }
+}
