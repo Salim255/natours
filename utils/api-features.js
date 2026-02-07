@@ -5,14 +5,14 @@ class APIFeatures {
   }
 
   filter() {
-    //1A) Filtring
+    //1A) Filtering
     const queryObj = { ...this.queryString };
     const excludeField = ['page', 'sort', 'limit', 'fields'];
     excludeField.forEach((el) => delete queryObj[el]);
     //console.log(req.query, queryObj);
 
-    //1B) Advance filtring
-    let queryStr = JSON.stringify(queryObj); //To convertthe object into string
+    //1B) Advance filtering
+    let queryStr = JSON.stringify(queryObj); //To convert the object into string
 
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); //\b \b means exat string, g means if there are more than one occurance
     console.log(JSON.parse(queryStr));
@@ -25,7 +25,7 @@ class APIFeatures {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
       console.log(sortBy);
-      this.query = this.query.sort(this.queryString.sort); //to sort fromupto down we use sort=-price
+      this.query = this.query.sort(this.queryString.sort); //to sort from upto down we use sort=-price
       //sort('price raingsAverage ...')
     } else {
       this.query = this.query.sort('-createdAt');
@@ -48,7 +48,7 @@ class APIFeatures {
     const skip = (page - 1) * limit;
     console.log(page, limit, skip);
     //page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
-    this.query = this.query.skip(skip).limit(limit); //skip mean to to jumb 10 by 10
+    this.query = this.query.skip(skip).limit(limit); //skip mean to to jump 10 by 10
 
     return this;
   }
