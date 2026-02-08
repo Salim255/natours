@@ -12,9 +12,24 @@ const authController = require('./../controllers/auth-controller');
 
 router.use(authController.protect);
 
-router.route('/').get( reviewController.getAllReviews).post( authController.restrictTo('user'),reviewController.setTourUserIds, reviewController.createReview); // this the root(/) /=== '/api/v1/reviews'
+router.route('/')
+.get( reviewController.getAllReviews)
+.post(
+    authController.restrictTo('user'),
+    reviewController.setTourUserIds,
+    reviewController.createReview,
+); // this the root(/) /=== '/api/v1/reviews'
 
 
-router.route('/:id').get(reviewController.getReview).patch(authController.restrictTo('user', 'admin'),reviewController.updateReview).delete(authController.restrictTo('user', 'admin'),reviewController.deleteReview);
+router.route('/:id')
+.get(reviewController.getReview)
+.patch(
+    authController.restrictTo('user', 'admin'),
+    reviewController.updateReview,
+)
+.delete(
+    authController.restrictTo('user', 'admin')
+    ,reviewController.deleteReview,
+);
 
 module.exports = router; //To be used in app.js

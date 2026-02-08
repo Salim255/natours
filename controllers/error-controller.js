@@ -36,10 +36,10 @@ const sendErrorDev = (err, req, res) => {
       stack: err.stack,
     });
   }
-  ///B)RENDERD WEBSITE
+  ///B)RENDERED WEBSITE
   console.error('Error', err);
   return res.status(err.statusCode).render('error', {
-    title: 'Somthing went wrong!',
+    title: 'Something went wrong!',
     msg: err.message,
   });
 };
@@ -60,14 +60,14 @@ const sendErrorProd = (err, req, res) => {
     //2)Send generic message
     return res.status(500).json({
       status: 'error',
-      message: 'Somthing went very wrong',
+      message: 'Something went very wrong',
     });
   }
   //B)Rendered WEBSITE
   //Operational error : send the message to the client
   if (err.isOperational) {
     return res.status(err.statusCode).render('error', {
-      title: 'Somthing went wrong!',
+      title: 'Something went wrong!',
       msg: err.message,
     });
   }
@@ -77,7 +77,7 @@ const sendErrorProd = (err, req, res) => {
   //2)Send generic message
   // RENDERED WEBSITE
   return res.status(err.statusCode).render('error', {
-    title: 'Somthing went wrong!',
+    title: 'Something went wrong!',
     msg: 'Please try again later.',
   });
 };
