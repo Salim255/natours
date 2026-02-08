@@ -54,11 +54,11 @@ const userSchema = new mongoose.Schema({
 
 // /************************ ENCRYPTING THE PASSWORD***********************/
 // W'll use mongoose middleware, and the one that we gonna use is a pre-save middleware
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   // we need NEXT in order to call the next middleware
 
   // Only run this function if password was actually modified
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return;
 
   /****we need to install bcryptjs package in order to use encrypting: npm i bcryptjs *******/
 
@@ -68,14 +68,14 @@ userSchema.pre('save', async function (next) {
   // Delete the passwordConfirm field
   this.passwordConfirm = undefined;
 
-  next();
+  //next();
 }); // pre mean between getting the data and saving the data to the database
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+userSchema.pre('save', function () {
+  if (!this.isModified('password') || this.isNew) return;
 
   this.passwordChangedAt = Date.now() - 1000; // To ensure that the token is always created after the password has been changed. thats is we  give the passwordChanedAt the actual time - one sencend
-  next();
+  //next();
 });
 
 // Pre.. we call them query middleware, (/^find/ => mean looking for word or strings that start by find)

@@ -39,7 +39,7 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.index({tour: 1, user: 1}, {unique: true}); // mains each combination of tour and user have to be unique, so no one user with more than reviewin the same tour(one your = one reveiw)
 
-reviewSchema.pre(/^find/, function (next) {
+reviewSchema.pre(/^find/, function () {
   // this.populate({
   //   //in query middleware we use this.---
   //   path: 'tour',
@@ -51,7 +51,7 @@ reviewSchema.pre(/^find/, function (next) {
   this.populate({ 
     path: 'user', 
     select: 'name photo' }); //Populate in order to fill up the field guides inside the tour, ThisPopulate is a fond  tools for working with datas in mongoose
-  next();
+  //next();
 });
 
 ////Static method in mongoose
@@ -95,17 +95,16 @@ reviewSchema.post('save', function(){
 
 //findByIdAndUpdate
 //findByIdAndDelete
-reviewSchema.pre(/^findOneAnd/,async function(next){
+reviewSchema.pre(/^findOneAnd/, async function(){
   this.r = await this.findOne();//here this keyword is for the current query(findOneAnd). by this.findOne() w'll get the document currently been proccessed.
   
-  next();
+  //next();
 });//In fact findOneAnd its just a shortand of //findByIdAndUpdate and 
 //findByIdAndDelete
 
 reviewSchema.post(/^findOneAnd/,async function(){
   // await this.findOne(); donsnt work here because the query has already excuted
-    await this.r.constructor.calcAverageRatings(this.r.tour);
-    console.log(this.r);
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

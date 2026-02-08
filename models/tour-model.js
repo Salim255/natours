@@ -149,11 +149,11 @@ tourSchema.virtual('reviews', {
 });
 
 //Document middleware: runs before  only .save() and .create() but not .insertMany()
-tourSchema.pre('save', function (next) {
+tourSchema.pre('save', function () {
   //every pre middleware have access to next
 
   this.slug = slugify(this.name, { lower: true }); //console.log(this);//This point to the currently process document, so here we have access to the document that gonna be saved, so we can make any change befre to be saved or create
-  next();
+  //next();
 }); //Pre means it gonna run before the actual event('save') in this case
 
 /* tourSchema.pre('save' ,async function(next) {//THIS CODE FOR EMBEDDING users INTO TOURS
@@ -193,10 +193,10 @@ tourSchema.pre(/^find/, function () {
   //next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
+tourSchema.post(/^find/, function (docs) {
   console.log(`Query has took  ${Date.now() - this.start} milliseconds !`);
   //console.log(docs);
-  next();
+  //next();
 });
 
 // //AGGREGATION MIDDLEWARE

@@ -2,7 +2,7 @@ const fs = require('fs');
 const dotenv = require('dotenv'); //we need this to connect our node app to the configue file
 dotenv.config({ path: './config.env' });
 const mongoose = require('mongoose');
-const Tour = require('./../models/tour-model');
+const Tour = require('../../models/tour-model');
 
 const DB = process.env.DATABASE.replace(
   '<db_password>',
@@ -19,7 +19,7 @@ mongoose
 
 
 // READ JSO file
-const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'));
 
 // Import data into database
 const importData = async() => {
@@ -40,3 +40,5 @@ const deleteData = async() => {
         
     }
 }
+
+console.log(process.argv)
