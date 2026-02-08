@@ -63,9 +63,9 @@ exports.login = catchAsync(async (req, res, next) => {
   //const email =  req.body.email;
   const { email, password } = req.body;
 
-  //1) Weneed to check if email and password exist
+  //1) We need to check if email and password exist
   if (!email || !password) {
-    return next(new AppError('Plese provide email and password', 400));
+    return next(new AppError('Please provide email and password', 400));
   }
 
   //2)check if the user exist && password is correct
@@ -76,7 +76,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  //3)If everthing ok, send the token to client
+  // 3) If everything ok, send the token to client
   createSendToken(user, 200, res);
 });
 
@@ -103,7 +103,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   } //reading  token from the header
-  else if (req.cookies.jwt) {
+  else if (req?.cookies?.jwt) {
     token = req.cookies.jwt;
   } //by this we can olso athuntiquet a user by token send in a cookies, not only the autherisation header
 
@@ -143,7 +143,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 //Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
+  if (req?.cookies?.jwt) {
     try {
       //1) Verify the token
       const decoded = await promisify(jwt.verify)(
@@ -177,7 +177,7 @@ exports.isLoggedIn = async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     //roles is an array might be  ['admin', 'lead-guide']. role='user
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req?.user?.role)) {
       return next(
         new AppError('You don not have permission to perfom this action', 403)
       );

@@ -43,7 +43,7 @@ const tourSchema = new mongoose.Schema(
       default: 4.5,
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
-      set: val => Math.round(val * 10 ) / 10,//4.666666, 4.6666, 47, 4.7//call seter fucntion, will be run each time a new value been set for this field
+      set: val => Math.round(val * 10 ) / 10,//4.666666, 4.6666, 47, 4.7//call setter function, will be run each time a new value been set for this field
     },
     ratingsQuantity: {
       type: Number,
@@ -60,12 +60,12 @@ const tourSchema = new mongoose.Schema(
         validator: function (discountValue) {
           return discountValue < this.price; //we trigger validation error when the return is false
         },
-        message: 'Discount price({VALUE}) should be below to the regular price', //VALUE have access to the realy value
+        message: 'Discount price({VALUE}) should be below to the regular price', //VALUE have access to the relay value
       },
     },
     summary: {
       type: String,
-      trim: true, //will remove all the white space in the begining and the end of the string
+      trim: true, //will remove all the white space in the beginning and the end of the string
       required: [true, 'A tour must have a summary'],
     },
     description: {
@@ -112,24 +112,24 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
-    //1)guides: Array//FOR EMBADING
+    //1)guides: Array//FOR embedding
 
-    //2) Referancing
+    //2) Referencing
     guides: [
       {
-        type: mongoose.Schema.ObjectId, //Means we expected type of each of the elemnts in the guides array to be a MongoDB ID
+        type: mongoose.Schema.ObjectId, //Means we expected type of each of the elements in the guides array to be a MongoDB ID
         ref: 'User',
       },
     ],
   },
   {
-    //passing options, getting the virual properties to the document/object
+    // passing options, getting the virtual properties to the document/object
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 
-//tourSchema.index({price: 1});//with index w'll scan only the part that concerne our cherche, so good performance
+//tourSchema.index({price: 1});//with index w'll scan only the part that concern our search, so good performance
 
 tourSchema.index({price: 1, ratingsAverage: -1});
 tourSchema.index({slug:1});
@@ -150,13 +150,13 @@ tourSchema.virtual('reviews', {
 
 //Document middleware: runs before  only .save() and .create() but not .insertMany()
 tourSchema.pre('save', function (next) {
-  //every pre middleware have acces to next
+  //every pre middleware have access to next
 
-  this.slug = slugify(this.name, { lower: true }); //console.log(this);//This point to the currently proccess document, so here we have access to the document that gonna be saved, so we can make any change befre to be saved or create
+  this.slug = slugify(this.name, { lower: true }); //console.log(this);//This point to the currently process document, so here we have access to the document that gonna be saved, so we can make any change befre to be saved or create
   next();
-}); //Pre means it gonna run before the actuel event('save') in this case
+}); //Pre means it gonna run before the actual event('save') in this case
 
-/* tourSchema.pre('save' ,async function(next) {//THIS CODE FOR EMBADING USESRS INTO TOURS
+/* tourSchema.pre('save' ,async function(next) {//THIS CODE FOR EMBEDDING users INTO TOURS
    const guidesPromises = this.guides.map( async id=> await User.findById(id));
    this.guides = await Promise.all(guidesPromises);
    next();
@@ -165,31 +165,32 @@ tourSchema.pre('save', function (next) {
 // tourSchema.pre('save', function(next){
 //     console.log('Will save document...');
 //     next();
-// });//we can have mutiple pr or post middlewar  for the same Hook(means save or creat), we can cn say pre save Hook or pre save middleware
+// });//we can have multiple pr or post middleware  for the same Hook(means save or create), we can cn say pre save Hook or pre save middleware
 
 // tourSchema.post('save', function(doc,next){
 //     console.log(doc);//doc is the finish document
 //     next();
-// }); //With post we have access to the document that has just saved to the database, and post excuted after all pre middlewar have completed
+// }); //With post we have access to the document that has just saved to the database, and post executed after all pre middleware have completed
 
-//Query Middlewar, pre will run before the command find excuted
+//Query Middleware, pre will run before the command find executed
 //tourSchema.pre('find', function (next)
-tourSchema.pre(/^find/, function (next) {
+tourSchema.pre(/^find/, function () {
   ///^find/ means all the expression that start by find
-  //and the this Keyword herewill point to the current query object and not th document
+  //and the this Keyword here will point to the current query object and not th document
   this.find({ secretTour: { $ne: true } });
 
   this.start = Date.now();
-  next();
+  //next();
 });
 
-tourSchema.pre(/^find/, function (next) {
+tourSchema.pre(/^find/, function () {
   this.populate({
     //in query middleware we use this.---
     path: 'guides',
     select: '-__v -passwordChangedAt',
-  }); //Poplate in order to fillup the field guides inside the tour, ThisPopulate is afondamuntal tools for working with datas in mongoose
-  next();
+  }); // Populate in order to fill up the field guides inside the tour, 
+  // This Populate is a fundamental tools for working with data in mongoose
+  //next();
 });
 
 tourSchema.post(/^find/, function (docs, next) {
@@ -200,12 +201,12 @@ tourSchema.post(/^find/, function (docs, next) {
 
 // //AGGREGATION MIDDLEWARE
 // tourSchema.pre('aggregate', function (next) {
-//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); //we use unshift to add to the bigigning of an array
-//   console.log(this.pipeline()); //this point to the current aggrigation object
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); //we use unshift to add to the begging of an array
+//   console.log(this.pipeline()); //this point to the current aggregation object
 //   next();
 // });
 
-//to creat the model using the schema
+// to create the model using the schema
 const Tour = mongoose.model('Tour', tourSchema); //we alq¡ways use uppercase in model name and variables
 
 module.exports = Tour;

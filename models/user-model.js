@@ -80,11 +80,10 @@ userSchema.pre('save', function (next) {
 
 // Pre.. we call them query middleware, (/^find/ => mean looking for word or strings that start by find)
 //
-userSchema.pre(/^find/, function (next) {
+userSchema.pre(/^find/, function () {
   // And what w'll do here is before finding the document we want to remove that have active property siting to false
   // this=> point to the current query => find.
   this.find({ active: { $ne: false } });
-  next();
 });
 
 /*****INSTANCE METHOD middleware */

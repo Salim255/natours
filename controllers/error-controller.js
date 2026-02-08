@@ -38,7 +38,7 @@ const sendErrorDev = (err, req, res) => {
   }
   ///B)RENDERED WEBSITE
   console.error('Error', err);
-  return res.status(err.statusCode).render('error', {
+  return res.status(err.statusCode).render('_error', {
     title: 'Something went wrong!',
     msg: err.message,
   });
@@ -66,7 +66,7 @@ const sendErrorProd = (err, req, res) => {
   //B)Rendered WEBSITE
   //Operational error : send the message to the client
   if (err.isOperational) {
-    return res.status(err.statusCode).render('error', {
+    return res.status(err.statusCode).render('_error', {
       title: 'Something went wrong!',
       msg: err.message,
     });
@@ -76,7 +76,7 @@ const sendErrorProd = (err, req, res) => {
   console.error('Error', err); //just like console.log()but its specific for errors
   //2)Send generic message
   // RENDERED WEBSITE
-  return res.status(err.statusCode).render('error', {
+  return res.status(err.statusCode).render('_error', {
     title: 'Something went wrong!',
     msg: 'Please try again later.',
   });

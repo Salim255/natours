@@ -5,7 +5,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const cors = require('cors');
 // Routs
 const userRouter = require('./routes/users-route');
 const tourRouter = require('./routes/tours-route');
@@ -16,8 +16,13 @@ const app = express();
 
 app.use(logger('dev'));
 
-// Engine
+app.use(cors('*'));
+//Body parser, reading data from body into req.body
+app.use(express.json({ limit: '10kb' })); //limit the body amount of data
+app.use(express.urlencoded({extended: true, limit: '10kb'}));//The way that the form send data to the server is called URLENODED, se here we need that middlewre to parse data comming from a URL ncoded form. then extend: True will allow us to pass some more complex data
+app.use(cookieParser());//Parseing or reading the data from the cookie
 
+// Engine
 //PUG ENGINE tell Express the template that we gonna use
 app.set('view engine', 'pug'); // we don't need to install pug or require it
 //We need also de define where this view is located in the file system, PUG template called views in Express

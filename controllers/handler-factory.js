@@ -18,6 +18,7 @@ exports.getAll = Model =>  catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate();
+
   //const doc = await features.query.explain();//explain((will show the process in the doc output))
   const doc = await features.query;
   //SEND RESPONSE
@@ -64,7 +65,7 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
   if (!doc) {
     return next(new AppError('No document found with that ID', 404));
   }
-  console.log('we are here\b:');
+
   res.status(204).json({
     // For delete we use 204, means no contains
     status: 'success',
