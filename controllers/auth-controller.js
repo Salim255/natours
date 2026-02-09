@@ -1,3 +1,4 @@
+require('dotenv').config({ path: './config.env' });
 const crypto = require('crypto');
 const { promisify } = require('util'); //We need this in orderer to use promisify method with the verification function(async..)
 const jwt = require('jsonwebtoken');
@@ -11,27 +12,30 @@ const sendEmail = require('./../utils/email');
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
-  }); //.sign(payload, ..)Payload is just an object for all the data.THIS ALL WE NEED TO LOGIN A NEW USER
+  })
 };
 
 ///***COOKIES ***///
 // Cookies is basically just a small piece of text that a server can send to clients, then when the client receives a cookies, it will automatically store it and then automaticaaly send it back along with all future requests to the same server
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = async (user, statusCode, res) => {
   const token = signToken(user._id);
+
   const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ), //convert to mil second
-    //secure: true, //So cookie will only be sent on an encrypted connection
-    httpOnly: true, //So this will make so that the cookie cannot be accessed or modified in any way by the browser, its just a super secure way off storing cookies
+    httpOnly: true,
+    secure: false, // true only on HTTPS
+    sameSite: 'lax', // allows cookies on same-site requests and top-level navigation
+    maxAge: process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
   };
 
-  res.cookie('jwt', token, cookieOptions); //This is how to send a cookie
+  // Set secure if in production
+  //if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true;
-  }
-  user.password = undefined; //To dnt show the password with the new document
+  // Send cookie
+  res.cookie('jwt', token, cookieOptions);
+
+  console.log(token);
+  // Hide password
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'Success',
@@ -41,6 +45,7 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -143,15 +148,20 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 //Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
+  console.log( "hello 🛑🛑✅", req?.cookies?.jwt );
   if (req?.cookies?.jwt) {
     try {
+      const token = req?.cookies?.jwt;
       //1) Verify the token
-      const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
-        process.env.JWT_SECRET
-      );
-
-      //2)Check if user still exist
+      if (!token) {
+        return next(
+          new AppError('You are not logged in!, Please log in to get access.', 401)
+        );
+      }
+      //2)Verification token
+      const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  
+    
       const currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
@@ -163,10 +173,12 @@ exports.isLoggedIn = async (req, res, next) => {
       }
 
       //THERE IS A LOGGED IN USER
-      //Now we make this user accsssible to our template, each and every pug template will have access to response.locals and what ever we put there  will then be a variable inside of these template, so its litle bite like passing data inside template using render()
+      //Now we make this user accessible to our template, each and every pug template will have access to response.locals and what ever we put there  will then be a variable inside of these template, so its litle bite like passing data inside template using render()
       res.locals.user = currentUser;
+    
       return next();
     } catch (err) {
+      console.log(err)
       return next();
     }
   }

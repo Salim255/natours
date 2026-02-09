@@ -36,7 +36,7 @@ export const displayMap = (location) => {
     bounds.extend(loc.coordinates);
   });
 
-  //fitBounds is the  fuction who excute the zooming and ...
+  //fitBounds is the  function who execute the zooming and ...
   map.fitBounds(bounds, {
     padding: {
       top: 200,
@@ -45,6 +45,4 @@ export const displayMap = (location) => {
       right: 100,
     },
   });
-
-
 }

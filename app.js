@@ -1,11 +1,13 @@
-const createError = require('http-errors');
-
+const helmet = require('helmet');
+const globalErrorHandler = require('./controllers/error-controller');
+const AppError = require('./utils/app-error');
+const cors = require('cors');
 // NPM install cookie-parser
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const cors = require('cors');
+
 // Routs
 const userRouter = require('./routes/users-route');
 const tourRouter = require('./routes/tours-route');
@@ -14,13 +16,13 @@ const viewRouter = require('./routes/views-route')
 
 const app = express();
 
+
 app.use(logger('dev'));
 
-app.use(cors('*'));
 //Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); //limit the body amount of data
 app.use(express.urlencoded({extended: true, limit: '10kb'}));//The way that the form send data to the server is called URLENODED, se here we need that middlewre to parse data comming from a URL ncoded form. then extend: True will allow us to pass some more complex data
-app.use(cookieParser());//Parseing or reading the data from the cookie
+app.use(cookieParser());// Parsing or reading the data from the cookie
 
 // Engine
 //PUG ENGINE tell Express the template that we gonna use
@@ -38,5 +40,12 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+
+
+app.all(/.*/, (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404)); //when we pass an argument to the next(), exress will undrestand that htis an error so the application will go dirct to the global error handler
+}); //all means for all http method(get,  post...)
+
+app.use(globalErrorHandler); //Global Error handler middleware
 
 module.exports = app;

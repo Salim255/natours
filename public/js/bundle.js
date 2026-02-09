@@ -8847,7 +8847,7 @@ var login = /*#__PURE__*/function () {
             if (res.data.status === 'Success') {
               (0, _alert.showAlert)('success', 'Logged in successfully');
               window.setTimeout(function () {
-                location.assign('/'); //We use this in order to load another page
+                location.assign('/'); // We use this in order to load another page
               }, 1500);
             }
 
@@ -9553,4 +9553,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/bundle.js.map
+//# sourceMappingURL=./bundle.js.map
